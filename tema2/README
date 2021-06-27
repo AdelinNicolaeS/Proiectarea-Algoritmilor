@@ -1,0 +1,67 @@
+***poduri.cpp***
+	Pentru a calcula numarul minim de poduri care trebuie traversate pentru
+a iesi din diagrama, voi folosi o coada si structura tuple din C++. Astfel,
+pornind din pozitia indicata la citire, voi verifica in primul rand daca sunt la
+marginea matricei si am posibilitatea sa ies. Apoi, in functie de podul peste
+care ma aflu, voi incerca pe rand fiecare dintre cele 2 sau 4 directii accesibile
+in acel moment. Am folosit 2 vectori pentru a obtine in mod succint indicii noi
+mele pozitii. Distanta o voi pastra din ce am extras din coada, la care voi adauga
+o unitate la fiecare deplasare. Folosesc de asemenea o functie pentru a vedea daca
+ma pot muta pe posibila viitoare pozitie. La final, daca am ajuns la unul dintre
+capetele matricei si pot iesi, afisez distanta corespunzatoare si ma opresc. In
+cazul in care coada s-a golit, inseamna ca m-am blocat si nu se poate iesi din
+matrice.
+
+***adrese.cpp***
+	 Pentru a rezolva problema, am folosit conceptul de union find, pentru
+care am avut nevoie de un vector de parinti pentru a stoca in mod eficient toate
+componentele conexe, precum si un Hashtable pentru a stabili o mapare intre o
+adresa de email si id-urile numelor care folosesc aceasta adresa de email. ID-
+urile sunt generate la citire, in ordinea in care se primesc numele de la input.
+Am folosit aceasta abordare cu indici deoarece in C++ ordonarea si folosirea
+intregilor este mai rapida decat manipularea stringurilor. Tot la intrare am
+initializat un vector de persoane care va fi folosit pentru afisare, precum si
+un vector de inaltimi care alaturi de vectorul de parinte ne va eficientiza
+codul. Dupa ce am creat structurile de date ajutatoare, parcurg fiecare adresa
+de email si conectez 2 cate 2 numele care folosesc aceasta adresa. Conectarea o
+realizez in functia do_union in care folosesc inaltimea arborelui cu radacina in
+parintele fiecarui indice ma ajuta in mod direct sa stabilesc o legatura fiu -
+parinte mai eficienta ca timp. Tot aici am modificat numele pentru a-l pastra
+pe cel mai mic lexicografic.
+	Dupa aceste operatii, iau pentru fiecare mail parintele primei adrese
+si leg la acesta adresa de email curenta. Astfel, se vor crea exact acele
+componenete conexe cautate alaturi de toate mail-urile care i se cuvin. La final
+voi pastra intr-un vector separat indicii/numele care reprezinta componentele
+conexe cautate, dupa care le voi afisa in mod corespunzator la iesire.
+
+***lego.cpp***
+	Pentru generarea tuturor combinarilor care incep cu 1 am folosit codul
+de pe ocw pe care l-am adaptat astfel incat sa nu genereze decat combinarile
+cerute. Dupa ce am obtinut aceste posibile solutii pe care le-am stocat intru-un
+vector, am luat fiecare solutie in parte si am calculat care este lungimea
+maxima de numere consecutive pe care o putem obtine. Pentru a rezolva eficient,
+am folosit programare dinamica, dp(i) = de cate numere am nevoie pentru a obtine
+numarul i folosind numai numerele din solutie. Am tinut totodata minte folosind
+un boolean cand ma aflu intr-o asemenea secventa de numere consecutive, iar de
+fiecare data cand aceasta secventa se termina, ii calculam lungimea si pastram
+mereu lungimea maxima. La final, daca am terminat cu o secventa de consecutive,
+verific separat daca aceasta este secventa de lungime maxima. Pentru fiecare
+posibila solutie, iau rezultatul obtinut si verific de fiecare data daca maximul
+s-a schimbat, pastrand mereu si solutia pentru care acest maxim a fost atins.
+La final, afisez corespunzator atat lungimea ceruta maxima, cat si solutia
+pentru acest maxim.
+
+***retea.cpp***
+	Pentru rezolvarea taskului, practic trebuie aflate componentele fiilor
+care sunt deconectate de restul arborelui. Pentru a pastra graful am folosit
+liste de adiacenta, dupa care am initializat vectorul backwards care memoreaza
+cea mai de sus muchie de intoarcere a subarborelui cu radacina in nodul curent.
+Am facut apoi o parcurgere DFS incepand cu primul nod, parcurgere in cadrul
+careia in primul for am determinat muchiile de intoarcere, adica pentru fiecare
+astfel de muchie am retinut adancimea minima (cat de sus poate avansa), altfel
+am continuat DFS-ul. In al doilea for am propagat si am determinat practic
+pentru fiecare nod muchia de intoarcere din tot subarborele care se duce in sus.
+Al treilea for este pentru a lua fiecare subarbore al copiilor din nodul curent
+si a determina daca este deconectat sau nu. In cazul in care este deconectat,
+numaram cate conexiuni se pierd. La intoarcerea din main, finalizam calcularea
+vectorului cu solutii eliminand toate conexiunile nodului, dupa care afisez. 
