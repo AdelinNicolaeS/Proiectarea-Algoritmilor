@@ -1,0 +1,126 @@
+***crypto.cpp***
+Scopul problemei este de a incrementa puterea computerelor in mod eficient
+pentru a obtine un minim global cat mai mare consumand cat mai putini bani.
+Astfel, am folosit o rezolvare de tip Greedy: am sortat crescator vectorul de
+calculatoare dupa puterea fiecaruia, dupa care am retinut puterea minima din
+momentul curent si am parcurs vectorul. Cat timp puterea calculatoarelor ramane
+aceeasi, retin suma totala necesara pentru a face un upgrade cu o unitate si
+continui parcurgerea. In cazul in care am ajuns la un calculator cu o noua
+putere de calcul (mai mare decat cea curenta), verific daca bugetul permite sa
+facem un upgrade de la puterea veche catre noua putere aparuta in vector. Daca
+acest lucru este posibil, scad suma necesara acestui upgrade din buget si
+modific puterea curenta, cat si suma necesara pentru upgrade-ul cu o unitate.
+In caz contrar, vom opri iterarea, constatam ca nu mai putem urca puterea cea
+mai mica la urmatoarea putere, deci vom mari aceasta putere cat ne va mai
+permite bugetul, dupa care vom afisa aceasta putere minima. Sortarea folosind
+functia built-in se realizeaza in O(N * log N), in timp ce parcurgerea inseamna
+inca O(N) pasi, rezultand o complexitate timp de O(N * log N), unde N este
+numarul de calculatoare, in timp ce complexitatea spatiala este de O(N)
+datorita stocarii vectorului de N calculatoare.
+
+***stocks.cpp***
+Pentru rezolvarea task-ului am aplicat o metoda de rezolvare specifica unei
+probleme de tip rucsac, folosind programare dinamica. Am creat un array 3D al
+carui scop era ca pe pozitia (i, j, k), acesta sa stocheze profitul maxim pe
+care il putem obtine pentru primele i elemente din vectorul de actiuni, dupa
+ce am cheltuit (maxim) suma j si ne-am asumat o pierdere maxima de valoare k.
+Din initializare, ne-am asumat ca toate pozitiile de tip (0, j, k), (i, 0, k),
+(i, j, 0) vor avea valoarea 0, acestea reprezentand cazurile de baza. Apoi, am
+parcurs array-ul si am folosit urmatorul rationament pentru a calcula valoarea
+de la pozitia (i, j, k): la momentul i, avem optiunea de a lua sau nu in calcul
+actiune i. Daca decidem sa o ignoram, vom avea aceeasi suma si aceeasi pierdere
+asumata ca la pasul anterior. Daca o vom lua in calcul, vom cheltui valoarea
+curenta a actiunii din suma noastra si ne vom asuma o pierdere, deci vom lua
+valoarea de pe pozitia (i - 1, prev_s, prev_l) la care adaugam profitul nou.
+Dintre aceste 2 optiuni, o vom alege pe cea mai mare. La final, array-ul fiind
+creat, pe pozitia (N, B, L) se va gasi chiar profitul maxim dupa parcurgerea
+celor N actiuni, cheltuind suma B cu pierderea maxima asumata L. Deoarece a
+fost nevoie de un array tridimensional, complexitatea spatiala va fi de
+O(N * B * L), unde N = numarul de actiuni, B = suma maxima cheltuita, in timp
+ce L = pierderea maxima. De asemenea, complexitatea temporala va fi tot de
+O(N * B * L) cauzatat de parcurgerea array-ului tridimensional.
+
+***valley.cpp***
+Am aplicat principiile programarii dinamice pentru rezolvarea acestui task,
+folosind un vector dp al carui scop este de a stoca pe pozitia i costul minim
+necesar pentru a transforma elementul de pe pozitia i din vector in "punct de
+inflexiune", adica sfarsit al prefixului si inceput al sufixului. Am considerat
+necesara folosirea unui vector suplimentar, current, al carui scop este de a
+stoca noul vector de valori dupa ce acestea sunt modificate la pasul i. Astfel,
+pentru cazul de baza dp[2], am calculat care este costul pentru ca primele 2
+elemente din vector sa fie ordonate descrescator, dupa care am calculat costul
+pentru obtinerea sufixului ordonat crescator. Logica pentru sufix a fost de a
+parcurge de la sfarsit la inceput, iar in momentul in care ordinea nu este
+respectata, sa scadem predecesorul pana devine egal cu succesorul pentru cost
+minim. Dupa aceea, am analizat care este diferenta dintre calculele efectuate
+la pasul i - 1 si cele de la pasul i. Am observat ca toate comparatiile se
+repeta, cu exceptia celor pentru perechile (i - 2, i - 1) si (i - 1, i). Am
+restaurat valorile de pe aceste pozitii la cele initiale, le-am scazut din cost
+si am refacut comparatiile manual la fiecare pas (costul lor este de O(1)). La
+finalul comparatiilor, am obtinut o noua valoare dp[i], pe care o compar cu
+minimul ulterior, scopul fiind la finalul parcurgerii costul minim pe care il
+puteam obtine. Complexitatea spatiala este de O(N) cu N = numarul de elemente
+deoarece am folosit 3 vectori pentru stocarea la un anumit punct a unor valori,
+iar complexitatea temporala este O(N) deoarece am parcurs o singura data lista
+de elemente, iar operatiile pe care le-am realizat la fiecare pas sunt in O(1).
+
+***ridge.cpp***
+Pentru rezolvarea task-ului am folosit o matrice de dimensiune (N + 1) * 3 cu
+scopul de a stoca la pozitia dp[i][j] costul minim pentru ca primii i munti din
+vector sa respecte conditia din cerinta (adica elementele adiacente sa nu fie
+egale), in varianta in care am decrementat elementul v[i] cu j pozitii. Astfel,
+am calculat cazul de baza pentru linia 1, pentru care am calculat costul pentru
+fiecare tip de decrementare posibila. Mentionez ca alegerea ca decrementarile
+sa fie doar cu valorile 0, 1 si 2 a venit pentru a pastra costul minim, nefiind
+necesara sau logica o decrementare de mai mult de 2 ori. In cazul in care la
+o anumita scadere, se ajunge la o valoarea mai mica decat 0 pentru inaltimea
+muntelui, se va pune direct costul infinit pentru a nu alege mai departe aceasta
+solutie. Pentru cazul general, dp[i][dec] va contine mai intai costul pentru a
+scadea inaltimea muntelui i cu dec unitati, dupa care va trebui sa alegem tipul
+de scadere pe care sa o faca predecesorul pentru a nu fi cele 2 valori egale si
+pentru a minimiza costul total. Daca oricum am alege tipul de scaderea a celui
+de dinainte, nu vom obtine elemente adiacente diferite, atunci setam costul
+curent cu infinit pentru a-l evita pe cat posibil, altfel selectam costul minim
+pentru care se respecta conditia. La final, pe linia N vom contine toate cele 3
+posibile scaderi ale lui v[i] pentru a finaliza problema. O vom alege pe aceea
+care minimizeaza costul, asigurandu-ne astfel ca nu vom lua din greseala pe una
+care ar putea contine infinit. La final, complexitatea temporala este de O(N)
+cu N numarul de munti, deoarece am parcurs o matrice de (N + 1) * 3 elemente,
+iar constantele se pot ignora in calcului final, in timp ce complexitatea
+spatiala este tot de O(N) deoarece am folosit doar un vector de dimensiune
+(N + 1) si matricea mai sus mentionata.
+
+***trigigel.cpp***
+Pentru a calcula numarul de secvente de indici cerut, am folosit principiile
+programarii dinamice si am folosit un triplet de numere (F0, F1, F2) care retin
+cate subsecvente care se termina in 0, 1 si 2 exista. Initial, intr-o rezolvare
+de O(N), am mentinut o matrice de dimensiune (N + 1) * 3 unde pe linia i aveam
+numarul de subsecvente care se termina in 0, 1, 2 pentru numarul i. Dupa ce
+am calculat empiric pentru cateva numere cum se modifica acesti 3 parametri, am
+observat o relatie recursiva intre aceste valori, insa modul in care acestea se
+mosteneau diferea in functie de divizibilitatea lui i fata de 3 (adica fata de
+ultima cifra adaugata in reprezentarea de tip 012...). Astfel, de fiecare data
+se mosteneau valorile initial (dp[i][j] = dp[i - 1][j] pentru j = 0, 1, 2), iar
+apoi coloana corespunzatoare ultimei cifre adaugate se marea cu (1 + valoare de
+la pasul precedent a cifrei anterioare din reprezentarea ternara). Astfel, la
+trecerea de la i = 4 la i = 5, practic se trecea de la (F0, F1, F2) la (F0,
+F0 + F1 + 1, F2), intrucat pentru i = 4 aveam sirul 0120, iar pentru i = 5 aveam
+(0120)1. Explicatia consta in faptul ca F1 mosteneste toate valorile de la pasul
+precedent, la care se adauga toate sirurile care se termina in 0, plus noua
+subsecventa nou creata din indicele 4. Pentru a trece dintr-o rezolvare liniara
+la una in timp logaritmic, am obtinut matricea M din fisier care realizeaza
+conversia de la un pas la celalalt. Problema a fost creata de faptul ca 
+recurenta ar depinde de 3 matrice in functie de resturile impartirii lui i la 3.
+Pentru a rezolva aceasta problema, am ales sa shiftez la stanga rezultatele lui
+F0, F1, F2, avand ca pas de pornire cazul N = 3, cand acestea sunt ordonate 
+crescator. Astfel, matricea aleasa va face mereu o transformare de tipul
+(1, F0, F1, F2) -> (1, F1, F2, F0 + F2 + 1), dezavantajul constand in faptul ca
+se va pierde ordinea acestor 3 parametri, insa avantajul fiind pastrarea
+celor 3 parametri pana la final, cand rezultatul va fi doar adunarea lor, deci
+nu vom fi influentati de schimbarea ordinii lor. Motivul pentru care am mai
+introdus un element 1 in vectorul rezultat este datorita scalarului care apare
+la trecerea de la un pas la altul, fiind nevoie de o matrice de 4 * 4. La final,
+am implementat ridicarea la putere a unei matrice in timp logaritmic cu scopul
+de a rezolva problema in O(log N), in timp ce spatiul alocat in vederea
+rezolvarii este unul constant (daca facem abstractie de apelurile pe stiva la
+inmultire), deci complexitatea spatiala va fi O(1).
